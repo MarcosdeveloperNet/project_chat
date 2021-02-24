@@ -18,4 +18,30 @@ io.on('connection', function(socket){
 
         console.log('Um usuário saiu do chat');
     })
-})
+
+    socket.on('msgServidor', function(data){
+        socket.emit(
+            'msgParaCliente',
+            {apelido : data.apelido, mensagem : data.mensagem}
+        );
+
+        socket.broadcast.emit(
+            'msgParaCliente',
+            {apelido : data.apelido, mensagem : data.mensagem}
+        );
+
+        if(parseInt(data.apelidos_logados) == 0) {
+            socket.emit(
+                'participantesParaCliente',
+                {apelido : data.apelido}
+            );
+
+            socket.broadcast.emit(
+                'participantesParaCliente',
+                {apelido : data.apelido}
+            );
+        };
+    });
+
+    
+});
